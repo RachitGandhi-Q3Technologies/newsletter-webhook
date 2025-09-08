@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newsletter Subscription</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f7f7f5;
+            color: #37352f;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            color: #37352f;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #37352f;
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: #eb5757;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2383e2;
+            box-shadow: 0 0 0 3px rgba(35, 131, 226, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        .sector-container {
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            max-height: 400px;
+            overflow-y: auto;
+            background: #fafafa;
+        }
+
+        .sector-item {
+            border-bottom: 1px solid #e0e0e0;
+            background: white;
+        }
+
+        .sector-item:last-child {
+            border-bottom: none;
+        }
+
+        .sector-header {
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            user-select: none;
+            transition: background-color 0.2s;
+        }
+
+        .sector-header:hover {
+            background-color: #f7f7f5;
+        }
+
+        .sector-header.selected {
+            background-color: #e3f2fd;
+        }
+
+        .chevron {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            transition: transform 0.2s;
+            opacity: 0.6;
+        }
+
+        .chevron.expanded {
+            transform: rotate(90deg);
+        }
+
+        .checkbox {
+            margin-right: 12px;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .sector-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #37352f;
+        }
+
+        .subsector-list {
+            display: none;
+            padding: 0 16px 12px 48px;
+            background: #fafafa;
+        }
+
+        .subsector-list.show {
+            display: block;
+        }
+
+        .subsector-item {
+            padding: 6px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .subsector-item label {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 13px;
+            color: #55524d;
+            font-weight: 400;
+        }
+
+        .subsector-item input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .custom-input-container {
+            margin-top: 8px;
+            display: none;
+        }
+
+        .custom-input-container.show {
+            display: block;
+        }
+
+        .custom-input-wrapper {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .custom-input {
+            flex: 1;
+            padding: 6px 10px;
+            font-size: 13px;
+        }
+
+        .add-custom-btn {
+            padding: 6px 12px;
+            background: #2383e2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .add-custom-btn:hover {
+            background: #1a6fc5;
+        }
+
+        .add-custom-link {
+            color: #2383e2;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        .add-custom-link:hover {
+            text-decoration: underline;
+        }
+
+        .custom-sector-section {
+            padding: 12px 16px;
+            border-top: 2px solid #e0e0e0;
+            background: #f0f7ff;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #e0e0e0;
+            border-radius: 4px;
+            padding: 24px;
+            text-align: center;
+            background: #fafafa;
+            transition: all 0.3s;
+        }
+
+        .file-upload-area:hover {
+            border-color: #2383e2;
+            background: #f0f7ff;
+        }
+
+        .file-upload-area.drag-over {
+            border-color: #2383e2;
+            background: #e3f2fd;
+        }
+
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px;
+            opacity: 0.5;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #2383e2;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .file-input-label:hover {
+            background: #1a6fc5;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-list {
+            margin-top: 16px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .file-name {
+            font-size: 14px;
+            color: #37352f;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+        }
+
+        .remove-file {
+            color: #eb5757;
+            cursor: pointer;
+            padding: 4px;
+            font-size: 18px;
+            line-height: 1;
+            border: none;
+            background: none;
+        }
+
+        .remove-file:hover {
+            color: #c44444;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px 24px;
+            background: #37352f;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 32px;
+        }
+
+        .submit-btn:hover {
+            background: #2f2b26;
+        }
+
+        .submit-btn:disabled {
+            background: #c0c0c0;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            color: #eb5757;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .success-message,
+        .error-alert {
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-alert {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-top: 24px;
+            font-size: 13px;
+        }
+
+        .custom-tag {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-left: 8px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <h1>Newsletter Subscription</h1>
+            
+            <form id="newsletterForm">
+                <!-- Name Field -->
+                <div class="form-group">
+                    <label for="userName">Name <span class="required">*</span></label>
+                    <input type="text" id="userName" name="userName" required placeholder="Enter your name">
+                    <div class="error-message" id="userNameError"></div>
+                </div>
+
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label for="userEmail">Email <span class="required">*</span></label>
+                    <input type="email" id="userEmail" name="userEmail" required placeholder="Enter your email">
+                    <div class="error-message" id="userEmailError"></div>
+                </div>
+
+                <!-- Industry Sectors & Subsectors -->
+                <div class="form-group">
+                    <label>Industry Sectors & Subsectors <span class="required">*</span></label>
+                    <div class="sector-container" id="sectorContainer">
+                        <!-- Sectors will be populated here by JavaScript -->
+                    </div>
+                    <div class="error-message" id="sectorError"></div>
+                </div>
+
+                <!-- File Upload -->
+                <div class="form-group">
+                    <label>Sample Newsletters (2-3 files, max 20MB each)</label>
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <label for="fileInput" class="file-input-label">Choose Files</label>
+                        <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.txt,.html">
+                        <p style="margin-top: 8px; font-size: 13px; color: #888;">or drag and drop</p>
+                        <p style="font-size: 12px; color: #888;">PDF, DOC, DOCX, TXT, HTML up to 20MB</p>
+                    </div>
+                    <div class="file-list" id="fileList"></div>
+                </div>
+
+                <!-- Frequency -->
+                <div class="form-group">
+                    <label for="frequency">Frequency <span class="required">*</span></label>
+                    <select id="frequency" name="frequency" required>
+                        <option value="">Select frequency</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="biweekly">Biweekly</option>
+                        <option value="fortnightly">Fortnightly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="semi-annually">Semi-annually</option>
+                        <option value="annually">Annually</option>
+                    </select>
+                    <div class="error-message" id="frequencyError"></div>
+                </div>
+
+                <!-- Suggested Links -->
+                <div class="form-group">
+                    <label for="suggestedLinks">Suggested Links and RSS feeds (optional)</label>
+                    <textarea id="suggestedLinks" name="suggestedLinks" placeholder="Enter suggested links & rss feeds (comma separated)"></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn" id="submitBtn">Submit</button>
+                
+                <div id="formMessage"></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const WEBHOOK_URL = 'https://q3techn8n.app.n8n.cloud/form-test/b15a4333-98cb-4a77-8728-28e1d138597d';
+        
+        // Sector-Subsector mapping from CSV
+        const sectorSubsectorMap = {
+            "Technology": ["AI Ethics & Safety", "Blockchain & Web3", "Cloud Computing", "Computer Vision", "Consumer Electronics", "Cybersecurity", "E-commerce", "Edtech (Education Technology)", "Enterprise Software", "Fintech (Financial Technology)", "Generative AI", "Healthtech", "IoT (Internet of Things)", "Machine Learning", "Marketing & Adtech", "Natural Language Processing (NLP)", "Online Gaming", "Proptech (Property Technology)", "Quantum Computing", "Robotics", "SaaS", "Semiconductors", "Social Media", "Telecommunications"],
+            "Finance & Business Services": ["Accounting & Audit", "Banking", "Consulting & Strategy", "Cryptocurrency", "Human Resources (HR)", "Insurance", "Investment Banking", "Legal Services", "Logistics & Supply Chain", "Marketing & Advertising", "Venture Capital & Private Equity", "Wealth Management"],
+            "Healthcare & Biotechnology": ["Biotechnology", "Clinical Research & Trials", "Digital Health", "Genomics", "Healthcare Administration", "Hospitals & Health Systems", "Medical Devices", "Mental Health Care", "Nanotechnology", "Pharmaceuticals", "Telemedicine"],
+            "Manufacturing & Industrials": ["3D Printing", "Aerospace & Defense", "Automotive", "Autonomous Vehicles", "Aviation & Airlines", "Heavy Machinery", "Industrial Automation", "Rail & Trucking", "Shipping & Maritime", "Warehouse & Storage"],
+            "Energy & Environment": ["Battery Technology", "Climate Tech", "Environmental Services", "Nuclear Energy", "Oil & Gas", "Renewable Energy (Solar)", "Sustainable Technology", "Utilities & Grids", "Waste Management & Recycling"],
+            "Retail & Consumer Goods": ["Apparel & Fashion", "Brick-and-Mortar Retail", "Consumer Packaged Goods (CPG)", "E-commerce", "Event Management", "Food & Beverage", "Hotels & Accommodation", "Restaurants & Food Service", "Travel & Leisure"],
+            "Real Estate & Construction": ["Architecture & Design", "Building Materials", "Commercial Construction", "Commercial Real Estate", "Proptech", "Residential Construction", "Residential Real Estate", "Urban Planning"],
+            "Public Sector & Non-Profit": ["Charity & Fundraising", "Defense", "Education & Research", "Public Administration", "Public Policy", "Smart Cities", "Social Impact & NGOs"],
+            "Creative & Entertainment": ["Film & Television Production", "Graphic Design", "Journalism", "Marketing & Advertising Agencies", "Music Industry", "Photography & Visual Arts", "Publishing", "UX/UI Design", "Video Games"],
+            "Agriculture & Food": ["Agri-tech", "Crop Production", "Food & Beverage Retail", "Food Delivery Services", "Food Processing", "Livestock & Dairy", "Restaurants & Chains", "Sustainable Farming"]
+        };
+
+        // State management
+        let uploadedFiles = [];
+        let customSectors = {};
+        let selectedData = {
+            sectors: [],
+            subsectors: {}
+        };
+
+        // Initialize the form
+        document.addEventListener('DOMContentLoaded', function() {
+            renderSectors();
+            setupFileUpload();
+            setupFormSubmission();
+        });
+
+        // Render sectors and subsectors
+        function renderSectors() {
+            const container = document.getElementById('sectorContainer');
+            container.innerHTML = '';
+            
+            // Render predefined sectors
+            Object.keys(sectorSubsectorMap).forEach(sector => {
+                const sectorDiv = createSectorElement(sector, sectorSubsectorMap[sector], false);
+                container.appendChild(sectorDiv);
+            });
+            
+            // Render custom sectors
+            Object.keys(customSectors).forEach(sector => {
+                const sectorDiv = createSectorElement(sector, customSectors[sector], true);
+                container.appendChild(sectorDiv);
+            });
+            
+            // Add custom sector section
+            const customSection = document.createElement('div');
+            customSection.className = 'custom-sector-section';
+            customSection.innerHTML = `
+                <a class="add-custom-link" onclick="toggleCustomSectorInput()">+ Add Custom Sector</a>
+                <div class="custom-input-container" id="customSectorInputContainer">
+                    <div class="custom-input-wrapper">
+                        <input type="text" class="custom-input" id="customSectorInput" placeholder="Enter sector name">
+                        <button type="button" class="add-custom-btn" onclick="addCustomSector()">Add</button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(customSection);
+        }
+
+        function createSectorElement(sector, subsectors, isCustom) {
+            const sectorDiv = document.createElement('div');
+            sectorDiv.className = 'sector-item';
+            sectorDiv.dataset.sector = sector;
+            
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'sector-header';
+            if (selectedData.sectors.includes(sector)) {
+                headerDiv.classList.add('selected');
+            }
+            
+            headerDiv.innerHTML = `
+                <svg class="chevron ${selectedData.sectors.includes(sector) ? 'expanded' : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+                <input type="checkbox" class="checkbox" ${selectedData.sectors.includes(sector) ? 'checked' : ''}>
+                <span class="sector-name">${sector}${isCustom ? '<span class="custom-tag">Custom</span>' : ''}</span>
+            `;
+            
+            const subsectorList = document.createElement('div');
+            subsectorList.className = 'subsector-list';
+            if (selectedData.sectors.includes(sector)) {
+                subsectorList.classList.add('show');
+            }
+            
+            // Add subsectors
+            subsectors.forEach(subsector => {
+                const subsectorItem = document.createElement('div');
+                subsectorItem.className = 'subsector-item';
+                const isChecked = selectedData.subsectors[sector]?.includes(subsector) || false;
+                subsectorItem.innerHTML = `
+                    <label>
+                        <input type="checkbox" ${isChecked ? 'checked' : ''}>
+                        <span>${subsector}${customSectors[sector]?.includes(subsector) ? '<span class="custom-tag">Custom</span>' : ''}</span>
+                    </label>
+                `;
+                
+                const checkbox = subsectorItem.querySelector('input[type="checkbox"]');
+                checkbox.addEventListener('change', function() {
+                    toggleSubsector(sector, subsector, this.checked);
+                });
+                
+                subsectorList.appendChild(subsectorItem);
+            });
+            
+            // Add custom subsector option
+            const customSubsectorDiv = document.createElement('div');
+            customSubsectorDiv.style.padding = '8px 0';
+            customSubsectorDiv.innerHTML = `
+                <a class="add-custom-link" onclick="toggleCustomSubsectorInput('${sector}')">+ Add Custom Subsector</a>
+                <div class="custom-input-container" id="customSubsectorInput-${sector}">
+                    <div class="custom-input-wrapper">
+                        <input type="text" class="custom-input" placeholder="Enter subsector name">
+                        <button type="button" class="add-custom-btn" onclick="addCustomSubsector('${sector}')">Add</button>
+                    </div>
+                </div>
+            `;
+            subsectorList.appendChild(customSubsectorDiv);
+            
+            sectorDiv.appendChild(headerDiv);
+            sectorDiv.appendChild(subsectorList);
+            
+            // Event listeners
+            headerDiv.addEventListener('click', function(e) {
+                if (e.target.type !== 'checkbox') {
+                    const checkbox = headerDiv.querySelector('.checkbox');
+                    checkbox.checked = !checkbox.checked;
+                    toggleSector(sector, checkbox.checked);
+                }
+            });
+            
+            headerDiv.querySelector('.checkbox').addEventListener('change', function(e) {
+                e.stopPropagation();
+                toggleSector(sector, this.checked);
+            });
+            
+            return sectorDiv;
+        }
+
+        function toggleSector(sector, checked) {
+            const sectorDiv = document.querySelector(`[data-sector="${sector}"]`);
+            const headerDiv = sectorDiv.querySelector('.sector-header');
+            const chevron = sectorDiv.querySelector('.chevron');
+            const subsectorList = sectorDiv.querySelector('.subsector-list');
+            
+            if (checked) {
+                selectedData.sectors.push(sector);
+                selectedData.subsectors[sector] = selectedData.subsectors[sector] || [];
+                headerDiv.classList.add('selected');
+                chevron.classList.add('expanded');
+                subsectorList.classList.add('show');
+            } else {
+                selectedData.sectors = selectedData.sectors.filter(s => s !== sector);
+                delete selectedData.subsectors[sector];
+                headerDiv.classList.remove('selected');
+                chevron.classList.remove('expanded');
+                subsectorList.classList.remove('show');
+            }
+            
+            clearSectorError();
+        }
+
+        function toggleSubsector(sector, subsector, checked) {
+            if (!selectedData.subsectors[sector]) {
+                selectedData.subsectors[sector] = [];
+            }
+            
+            if (checked) {
+                if (!selectedData.subsectors[sector].includes(subsector)) {
+                    selectedData.subsectors[sector].push(subsector);
+                }
+            } else {
+                selectedData.subsectors[sector] = selectedData.subsectors[sector].filter(s => s !== subsector);
+            }
+        }
+
+        function toggleCustomSectorInput() {
+            const container = document.getElementById('customSectorInputContainer');
+            container.classList.toggle('show');
+            if (container.classList.contains('show')) {
+                document.getElementById('customSectorInput').focus();
+            }
+        }
+
+        function toggleCustomSubsectorInput(sector) {
+            const container = document.getElementById(`customSubsectorInput-${sector}`);
+            container.classList.toggle('show');
+            if (container.classList.contains('show')) {
+                container.querySelector('.custom-input').focus();
+            }
+        }
+
+        function addCustomSector() {
+            const input = document.getElementById('customSectorInput');
+            const sectorName = input.value.trim();
+            
+            if (sectorName && !sectorSubsectorMap[sectorName] && !customSectors[sectorName]) {
+                customSectors[sectorName] = [];
+                input.value = '';
+                document.getElementById('customSectorInputContainer').classList.remove('show');
+                renderSectors();
+            }
+        }
+
+        function addCustomSubsector(sector) {
+            const container = document.getElementById(`customSubsectorInput-${sector}`);
+            const input = container.querySelector('.custom-input');
+            const subsectorName = input.value.trim();
+            
+            if (subsectorName) {
+                const allSubsectors = [...(sectorSubsectorMap[sector] || []), ...(customSectors[sector] || [])];
+                if (!allSubsectors.includes(subsectorName)) {
+                    if (customSectors[sector]) {
+                        customSectors[sector].push(subsectorName);
+                    } else if (sectorSubsectorMap[sector]) {
+                        customSectors[sector] = customSectors[sector] || [];
+                        if (!sectorSubsectorMap[sector].includes(subsectorName)) {
+                            customSectors[sector].push(subsectorName);
+                        }
+                    }
+                    input.value = '';
+                    container.classList.remove('show');
+                    renderSectors();
+                }
+            }
+        }
+
+        function clearSectorError() {
+            document.getElementById('sectorError').textContent = '';
+        }
+
+        // File upload functionality
+        function setupFileUpload() {
+            const fileInput = document.getElementById('fileInput');
+            const uploadArea = document.getElementById('fileUploadArea');
+            
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            // Drag and drop
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('drag-over');
+            });
+            
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('drag-over');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('drag-over');
+                handleFiles(e.dataTransfer.files);
+            });
+        }
+
+        function handleFileSelect(e) {
+            handleFiles(e.target.files);
+        }
+
+        function handleFiles(files) {
+            const validFiles = Array.from(files).filter(file => {
+                const sizeMB = file.size / (1024 * 1024);
+                if (sizeMB > 20) {
+                    alert(`${file.name} is over 20MB and cannot be uploaded.`);
+                    return false;
+                }
+                return true;
+            });
+            
+            const remainingSlots = 3 - uploadedFiles.length;
+            if (validFiles.length > remainingSlots) {
+                alert(`You can only upload ${remainingSlots} more file(s). Maximum 3 files allowed.`);
+                validFiles.splice(remainingSlots);
+            }
+            
+            uploadedFiles = [...uploadedFiles, ...validFiles];
+            renderFileList();
+        }
+
+        function renderFileList() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            
+            uploadedFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <span class="file-name">${file.name}</span>
+                    <button type="button" class="remove-file" onclick="removeFile(${index})">×</button>
+                `;
+                fileList.appendChild(fileItem);
+            });
+        }
+
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            renderFileList();
+        }
+
+        // Form submission
+        function setupFormSubmission() {
+            const form = document.getElementById('newsletterForm');
+            form.addEventListener('submit', handleFormSubmit);
+        }
+
+        function validateForm() {
+            let isValid = true;
+            
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+            
+            // Validate name
+            const userName = document.getElementById('userName').value.trim();
+            if (!userName) {
+                document.getElementById('userNameError').textContent = 'Name is required';
+                isValid = false;
+            }
+            
+            // Validate email
+            const userEmail = document.getElementById('userEmail').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!userEmail) {
+                document.getElementById('userEmailError').textContent = 'Email is required';
+                isValid = false;
+            } else if (!emailRegex.test(userEmail)) {
+                document.getElementById('userEmailError').textContent = 'Please enter a valid email';
+                isValid = false;
+            }
+            
+            // Validate sectors
+            if (selectedData.sectors.length === 0) {
+                document.getElementById('sectorError').textContent = 'Please select at least one sector';
+                isValid = false;
+            }
+            
+            // Validate frequency
+            const frequency = document.getElementById('frequency').value;
+            if (!frequency) {
+                document.getElementById('frequencyError').textContent = 'Please select a frequency';
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const formMessage = document.getElementById('formMessage');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            // Prepare form data
+            const formData = new FormData();
+            formData.append('userName', document.getElementById('userName').value.trim());
+            formData.append('userEmail', document.getElementById('userEmail').value.trim());
+            formData.append('sectors', JSON.stringify(selectedData.sectors));
+            formData.append('subsectors', JSON.stringify(selectedData.subsectors));
+            formData.append('customSectors', JSON.stringify(customSectors));
+            formData.append('frequency', document.getElementById('frequency').value);
+            formData.append('suggestedLinksRss', document.getElementById('suggestedLinksRss').value);
+            
+            // Add files
+            uploadedFiles.forEach((file, index) => {
+                formData.append(`newsletter_${index}`, file);
+            });
+            
+            try {
+                // For demo purposes, we'll simulate a successful submission
+                // Replace this with actual fetch call to your webhook
+                
+                if (WEBHOOK_URL === 'https://your-webhook-url.com/endpoint') {
+                    // Demo mode
+                    setTimeout(() => {
+                        formMessage.innerHTML = '<div class="success-message">✓ Form submitted successfully! (Demo mode)</div>';
+                        resetForm();
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Submit';
+                    }, 1500);
+                } else {
+                    // Actual submission
+                    const response = await fetch(WEBHOOK_URL, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (response.ok) {
+                        formMessage.innerHTML = '<div class="success-message">✓ Form submitted successfully!</div>';
+                        resetForm();
+                    } else {
+                        throw new Error('Server responded with an error');
+                    }
+                    
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit';
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                formMessage.innerHTML = '<div class="error-alert">Failed to submit form. Please try again.</div>';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit';
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('newsletterForm').reset();
+            uploadedFiles = [];
+            customSectors = {};
+            selectedData = {
+                sectors: [],
+                subsectors: {}
+            };
+            renderFileList();
+            renderSectors();
+        }
+    </script>
+</body>
+</html>
