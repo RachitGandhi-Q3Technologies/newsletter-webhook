@@ -229,15 +229,16 @@
 
         .file-upload-area {
             border: 2px dashed #e0e0e0;
-            border-radius: 4px;
-            padding: 24px;
+            border-radius: 8px;
+            padding: 32px 24px;
             text-align: center;
             background: #fafafa;
             transition: all 0.3s;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
+            min-height: 160px;
         }
 
         .file-upload-area:hover {
@@ -251,39 +252,53 @@
         }
 
         .upload-icon {
-            width: 48px;
-            height: 48px;
-            opacity: 0.5;
-            flex-shrink: 0;
+            width: 56px;
+            height: 56px;
+            opacity: 0.4;
+            margin-bottom: 16px;
+            color: #888;
+        }
+
+        .upload-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
         }
 
         .file-input-label {
             display: inline-block;
-            padding: 8px 16px;
+            padding: 10px 20px;
             background: #2383e2;
             color: white;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
-            transition: background 0.2s;
-            margin: 0;
+            transition: all 0.2s;
+            border: none;
+            margin-bottom: 8px;
         }
 
         .file-input-label:hover {
             background: #1a6fc5;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(35, 131, 226, 0.3);
         }
 
         .upload-text {
             margin: 0;
             font-size: 13px;
             color: #888;
+            font-weight: 400;
         }
 
         .upload-formats {
             margin: 0;
             font-size: 12px;
-            color: #888;
+            color: #999;
+            font-weight: 400;
+            margin-top: 4px;
         }
 
         input[type="file"] {
@@ -437,10 +452,12 @@
                             <polyline points="17 8 12 3 7 8"></polyline>
                             <line x1="12" y1="3" x2="12" y2="15"></line>
                         </svg>
-                        <label for="fileInput" class="file-input-label">Choose Files</label>
+                        <div class="upload-content">
+                            <label for="fileInput" class="file-input-label">Choose Files</label>
+                            <p class="upload-text">or drag and drop</p>
+                            <p class="upload-formats">PDF, DOC, DOCX, TXT, HTML up to 20MB</p>
+                        </div>
                         <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.txt,.html">
-                        <p class="upload-text">or drag and drop</p>
-                        <p class="upload-formats">PDF, DOC, DOCX, TXT, HTML up to 20MB</p>
                     </div>
                     <div class="file-list" id="fileList"></div>
                 </div>
