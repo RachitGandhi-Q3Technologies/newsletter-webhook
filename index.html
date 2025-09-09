@@ -104,6 +104,7 @@
             cursor: pointer;
             display: flex;
             align-items: center;
+            -webkit-user-select: none;
             user-select: none;
             transition: background-color 0.2s;
         }
@@ -233,6 +234,10 @@
             text-align: center;
             background: #fafafa;
             transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
         }
 
         .file-upload-area:hover {
@@ -248,8 +253,8 @@
         .upload-icon {
             width: 48px;
             height: 48px;
-            margin: 0 auto 12px;
             opacity: 0.5;
+            flex-shrink: 0;
         }
 
         .file-input-label {
@@ -262,10 +267,23 @@
             font-size: 14px;
             font-weight: 500;
             transition: background 0.2s;
+            margin: 0;
         }
 
         .file-input-label:hover {
             background: #1a6fc5;
+        }
+
+        .upload-text {
+            margin: 0;
+            font-size: 13px;
+            color: #888;
+        }
+
+        .upload-formats {
+            margin: 0;
+            font-size: 12px;
+            color: #888;
         }
 
         input[type="file"] {
@@ -403,8 +421,8 @@
 
                 <!-- Industry Sectors & Subsectors -->
                 <div class="form-group">
-                    <label>Industry Sectors & Subsectors <span class="required">*</span></label>
-                    <div class="sector-container" id="sectorContainer">
+                    <label for="sectorContainer">Industry Sectors & Subsectors <span class="required">*</span></label>
+                    <div class="sector-container" id="sectorContainer" role="group" aria-labelledby="sectorLabel">
                         <!-- Sectors will be populated here by JavaScript -->
                     </div>
                     <div class="error-message" id="sectorError"></div>
@@ -412,7 +430,7 @@
 
                 <!-- File Upload -->
                 <div class="form-group">
-                    <label>Sample Newsletters (2-3 files, max 20MB each)</label>
+                    <label for="fileInput">Sample Newsletters (2-3 files, max 20MB each)</label>
                     <div class="file-upload-area" id="fileUploadArea">
                         <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -421,8 +439,8 @@
                         </svg>
                         <label for="fileInput" class="file-input-label">Choose Files</label>
                         <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.txt,.html">
-                        <p style="margin-top: 8px; font-size: 13px; color: #888;">or drag and drop</p>
-                        <p style="font-size: 12px; color: #888;">PDF, DOC, DOCX, TXT, HTML up to 20MB</p>
+                        <p class="upload-text">or drag and drop</p>
+                        <p class="upload-formats">PDF, DOC, DOCX, TXT, HTML up to 20MB</p>
                     </div>
                     <div class="file-list" id="fileList"></div>
                 </div>
